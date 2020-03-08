@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oy.album.dao.AlbumDao">
+    <resultMap id="albumMap" type="com.oy.album.vo.AlbumVo">
+        <result column="id" property="id"  jdbcType="INTEGER"/>
+        <result column="album_code" property="albumCode"  jdbcType="VARCHAR"/>
+        <result column="album_name" property="albumName"  jdbcType="VARCHAR"/>
+        <result column="status" property="status"  jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy"  jdbcType="VARCHAR"/>
+        <result column="create_date" property="createDate"  jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="column_base_list">
+        id, album_code, album_name, status, create_by, create_date
+    </sql>
+    <insert id="insertAlbum" parameterType="com.oy.album.vo.AlbumVo">
+        insert into t_album
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="albumCode">
+                album_code，
+            </if>
+            <if test="albumName">
+                album_name，
+            </if>
+            <if test="status">
+                status，
+            </if>
+            <if test="createBy">
+                create_by，
+            </if>
+            <if test="createDate">
+                create_date，
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="albumCode">
+                #{albumCode, jdbcType=VARCHAR}
+            </if>
+            <if test="albumName">
+                #{albumName, jdbcType=VARCHAR}
+            </if>
+            <if test="status">
+                #{status, jdbcType=VARCHAR}
+            </if>
+            <if test="createBy">
+                #{createBy, jdbcType=VARCHAR}
+            </if>
+            <if test="createDate">
+                #{createDate, jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+    </insert>
+    <update id="updateAlbum" parameterType="com.oy.album.vo.AlbumVo">
+        update table t_album
+        <set>
+            <if test="albumName">
+                #{albumName, jdbcType=VARCHAR}
+            </if>
+            <if test="status">
+                #{status, jdbcType=VARCHAR}
+            </if>
+            <if test="createBy">
+                #{createBy, jdbcType=VARCHAR}
+            </if>
+        </set>
+        where album_code = #{albumCode, jdbcType=VARCHAR}
+    </update>
+    <update id="deleteAlbum" parameterType="java.lang.String">
+        delete from t_album where album_code = #{albumCode, jdbcType=VARCHAR}
+    </update>
+    <select id="findAlbumByCode" parameterType="java.lang.String" resultMap="albumMap">
+        select
+        <include refid="column_base_list" />
+        from t_album where album_code = #{albumCode, jdbcType=VARCHAR}
+    </select>
+    <select id="findAlbumByStatus" parameterType="java.lang.String" resultMap="albumMap">
+        select
+       *
+        from t_album where status = #{status, jdbcType=VARCHAR}
+    </select>
+</mapper>

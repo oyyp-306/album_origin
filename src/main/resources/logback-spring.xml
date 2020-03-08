@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<!-- scan:当此属性设置为true时，配置文档如果发生改变，将会被重新加载，默认值为true -->
+<!-- scanPeriod:设置监测配置文档是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。
+                 当scan为true时，此属性生效。默认的时间间隔为1分钟。 -->
+<configuration scan="true" scanPeriod="60 seconds">
+    <contextName>album</contextName>
+    <property name="log_pattern" value="%d{yyyy-MM-dd HH:mm:ss:SSS} %contextName-[%thread]-%-5level %class.%method:[%line] %msg%n" />
+    <property name="log_dir" value="F:/project/logs/"/>
+    <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${log_pattern}</pattern>
+        </encoder>
+    </appender>
+    <appender name="fileLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>${log_pattern}</pattern>
+        </encoder>
+        <!-- 日志记录器的滚动策略，按日期，按大小记录 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${log_dir}%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!--日志文档保留天数-->
+            <maxHistory>30</maxHistory>
+            <maxFileSize>50MB</maxFileSize>
+        </rollingPolicy>
+    </appender>
+    <logger name="com.oy.album" level="info" additivity="false">
+        <!-- level="info"是设置日志级别：作用是info级别及其以上级别的日志会输出（info、warn、error,,,）
+    additivity="false"是否向上级logger传递打印信息。默认是true -->
+        <appender-ref ref="consoleLog" />
+    </logger>
+    <root>
+        <appender-ref ref="consoleLog" />
+        <appender-ref ref="fileLog" />
+    </root>
+</configuration>
